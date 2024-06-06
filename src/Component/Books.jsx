@@ -87,7 +87,6 @@ class Books extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        {/* Books part */}
         <div>
           {books.length > 0 ? (
             <Grid sx={{ padding: "100px" }} container spacing={5}>
