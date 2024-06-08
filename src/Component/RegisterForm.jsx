@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import Books from "./Books";
 
@@ -14,17 +14,23 @@ function RegisterForm() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [openBook, setOpenBook] = useState(false);
 
+  useEffect(() => {
+    const savedFormData = localStorage.getItem("registerFormData");
+    if (savedFormData) {
+      const parsedFormData = JSON.parse(savedFormData);
+      setFormData(parsedFormData);
+      validateForm(parsedFormData);
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const newFormData = { ...formData, [name]: value };
+    setFormData(newFormData);
 
-    validateForm({
-      ...formData,
-      [name]: value,
-    });
+    localStorage.setItem("registerFormData", JSON.stringify(newFormData));
+
+    validateForm(newFormData);
   };
 
   const validateForm = (data) => {
@@ -61,6 +67,7 @@ function RegisterForm() {
     if (!isSubmitDisabled) {
       alert("Form submitted successfully!");
       setOpenBook(true);
+      localStorage.removeItem("registerFormData");
     } else {
       alert("Please correct the errors in the form.");
     }
@@ -78,6 +85,9 @@ function RegisterForm() {
         minHeight="100vh"
       >
         <form onSubmit={handleSubmit} style={{ textAlign: "center" }}>
+          <Typography sx={{ color: "rgb(216, 0, 0)" }}>
+            <strong> CREATE ACCOUNT</strong>
+          </Typography>
           <TextField
             label="Your Name"
             margin="normal"
